@@ -1,0 +1,59 @@
+- pipeline: "quickstart_pipeline_customers"
+  bronze: 
+    queryName: "quickstart_customers"
+    format: "cloudFiles"
+    source_path: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/raw_data/customers"
+    read_options: 
+      cloudFiles.format: "csv"
+      cloudFiles.schemaLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/autoloader_schema/customers_bronze_table"
+      header: "True"
+    write_options: 
+      checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/offsets/customers_bronze_table"
+      mergeSchema: "true"
+    outputMode: "append"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.customers_bronze_table"
+    trigger:
+      availableNow: True    
+  silver: 
+    cdc: True
+    key_col: "customerId"
+    sequence_col: "modifiedAt"
+    decode: default
+    queryName: "query_silver_customers"
+    #select_expression: "SOME QUERY"
+    #filters: "SOME FILTERS"
+    write_options: 
+      checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/offsets/customers_silver_table"
+      mergeSchema: "true"
+    rename_columns:
+      customer_id: "customerId"
+      customer_notes: "customerNotes"
+      created_at: "createdAt"
+      modified_at: "modifiedAt"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.customers_silver_table"
+- pipeline: "quickstart_pipeline_products"
+  bronze: 
+    queryName: "quickstart_products"
+    format: "cloudFiles"
+    source_path: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/raw_data/products"
+    read_options: 
+      cloudFiles.format: "csv"
+      cloudFiles.schemaLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/autoloader_schema/products_bronze_table"
+      header: "True"
+    write_options: 
+      checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/offsets/products_bronze_table"
+      mergeSchema: "true"
+    outputMode: "append"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.products_bronze_table"
+    trigger:
+      availableNow: True    
+  silver: 
+    cdc: True
+    key_col: "product_name"
+    sequence_col: "modified_at"
+    decode: default
+    queryName: "query_silver_products"
+    write_options: 
+      checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/checkpointlocations/offsets/products_silver_table"
+      mergeSchema: "true"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.products_silver_table"

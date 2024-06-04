@@ -1,0 +1,30 @@
+{
+    "properties": {
+            "project_name": {
+                "type": "string",
+                "default": "Project_StructuredStreamingMeta",
+                "description": "Project Name",
+                "order": 1
+            },
+            "user_name": {
+                "type": "string",
+                "description": "User name",
+                "default": "alex.lopes@databricks.com",
+                "order": 2
+            },
+            "workspace_host": {
+                "type": "string",
+                "description": "Workspace host for deployment",
+                "default": "https://e2-demo-field-eng.cloud.databricks.com/",
+                "order": 3
+            },
+            "cluster_id": {
+                "type": "string",
+                "description": "A shared cluster id to test",
+                "default": "0514-124859-m82dtmzd",
+                "order": 4
+            }            
+    },
+    "success_message": "\nYour bundle '{{.project_name}}' has been created."
+
+ }

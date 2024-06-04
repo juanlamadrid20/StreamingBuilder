@@ -1,0 +1,24 @@
+- pipeline: "quickstart_pipeline_customers_jinja"
+  inherit: csv_pipeline_template.yml
+  bronze:     
+    source_path: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/raw_data/customers"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.customers_bronze_table"  
+  silver: 
+    key_col: "customerId"
+    sequence_col: "modifiedAt"
+    rename_columns:
+      customer_id: "customerId"
+      customer_notes: "customerNotes"
+      created_at: "createdAt"
+      modified_at: "modifiedAt"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.customers_silver_table_in"
+
+- pipeline: "quickstart_pipeline_products_jinja"
+  inherit: csv_pipeline_template.yml
+  bronze:     
+    source_path: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/raw_data/products"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.products_bronze_table"   
+  silver: 
+    key_col: "product_name"
+    sequence_col: "modified_at"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.products_silver_table_in"    

@@ -1,0 +1,23 @@
+pipeline: "CSV Pipeline template using autloader"
+bronze: 
+  queryName: "bronze_query_{{pipeline}}"
+  format: "cloudFiles"    
+  read_options: 
+    cloudFiles.format: "csv"
+    cloudFiles.schemaLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/ssm_data/{{pipeline}}/schema"
+    header: "True"
+  write_options: 
+    checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/ssm_data/{{pipeline}}/checkpoint/bronze"
+    mergeSchema: "true"
+  outputMode: "append"
+  trigger:
+    availableNow: True  
+silver: 
+  cdc: True
+  decode: default
+  queryName: "silver_query_{{pipeline}}"
+  write_options: 
+    checkpointLocation: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/ssm_data/{{pipeline}}/checkpoint/silver"
+    mergeSchema: "true"
+  trigger:
+    availableNow: True  

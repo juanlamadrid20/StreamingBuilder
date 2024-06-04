@@ -1,0 +1,86 @@
+# The main job for Project_StructuredStreamingMeta.
+resources:
+  jobs:
+    Project_StructuredStreamingMeta_job:
+      name: Project_StructuredStreamingMeta_job
+      schedule:
+        # Run every day at 8:37 AM
+        quartz_cron_expression: '44 37 8 * * ?'
+        timezone_id: Europe/Amsterdam
+      email_notifications:
+        on_failure:
+          - {{user_name}}
+      tasks:
+        - task_key: Bronze
+          # job_cluster_key: job_cluster          
+          existing_cluster_id: "{{.cluster_id}}"      
+          notebook_task:
+            notebook_path: ../../src/01-BronzeStreaming.py
+        - task_key: Silver
+          # job_cluster_key: job_cluster          
+          existing_cluster_id: "{{.cluster_id}}"
+          notebook_task:
+            notebook_path: ../../src/02-SilverStreaming.py  
+          depends_on: 
+            - task_key: Bronze
+      parameters:
+        - name: config_path
+          default: "/Workspace/${workspace.file_path}/resources/pipeline_config/pipeline.yml" 
+      # job_clusters:
+      #   - job_cluster_key: job_cluster
+      #     new_cluster:
+      #       spark_version: 13.3.x-scala2.12
+      #       node_type_id: Standard_D3_v2
+      #       autoscale:
+      #           min_workers: 1
+      #           max_workers: 4
+    Project_StructuredStreamingMetaJinja2_job:
+      name: Project_StructuredStreamingMetaJinja2_job
+      schedule:
+        quartz_cron_expression: '44 37 8 * * ?'
+        timezone_id: Europe/Amsterdam
+      email_notifications:
+        on_failure:
+          - alex.lopes@databricks.com
+      tasks:
+        - task_key: Bronze
+          existing_cluster_id: "{{.cluster_id}}"      
+          notebook_task:
+            notebook_path: ../../src/01-BronzeStreaming.py
+        - task_key: Silver  
+          existing_cluster_id: "{{.cluster_id}}"
+          notebook_task:
+            notebook_path: ../../src/02-SilverStreaming.py  
+          depends_on: 
+            - task_key: Bronze
+      parameters:
+        - name: config_path
+          default: "/Workspace/${workspace.file_path}/resources/pipeline_config/csv_pipeline.yml" 
+        - name: template_type
+          default: "jinja2" 
+    Project_StructuredStreamingMetaJinja2Dynamic_job:
+      name: Project_StructuredStreamingMetaJinja2Dynamic_job
+      schedule:
+        quartz_cron_expression: '44 37 8 * * ?'
+        timezone_id: Europe/Amsterdam
+      email_notifications:
+        on_failure:
+          - {{user_name}}
+      tasks:
+        - task_key: Bronze
+          existing_cluster_id: "{{.cluster_id}}"      
+          notebook_task:
+            notebook_path: ../../src/01-BronzeStreaming.py
+        - task_key: Silver  
+          existing_cluster_id: "{{.cluster_id}}"
+          notebook_task:
+            notebook_path: ../../src/02-SilverStreaming.py  
+          depends_on: 
+            - task_key: Bronze
+      parameters:
+        - name: config_path
+          default: "/Workspace/${workspace.file_path}/resources/pipeline_config/csv_pipeline_dynamic.yml" 
+        - name: template_param_file
+          default: "parameters.yml" 
+        - name: template_type
+          default: "jinja2" 

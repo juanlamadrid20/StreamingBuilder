@@ -1,0 +1,11 @@
+{% for table in tables %}
+- pipeline: "quickstart_pipeline_{{table}}_dyn"
+  inherit: csv_pipeline_template.yml
+  bronze:     
+    source_path: "/Volumes/alex_lopes_quickstart/structured_streaming_meta/raw_data/{{table}}"
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.{{table}}_bronze_table_dyn"   
+  silver:
+    cdc: False 
+    toTable: "alex_lopes_quickstart.structured_streaming_meta.{{table}}_silver_table_dyn"    
+    outputMode: "append"
+{% endfor %}
