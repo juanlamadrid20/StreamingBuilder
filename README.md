@@ -1,4 +1,4 @@
-## Introductions
+## Introduction
 The goal of this project is to provide a tool to facilitate the creation of streaming pipelines according to the details and paremeters defined in a yaml 
 configuration file. </br>
 
